@@ -5,6 +5,8 @@ Introduction to Computer Simualtion II course at the International Physics Progr
 Continuation of the Introduction to Computer Simulation I course, expands more deeply into the Ising, Potts and XY models, all folders contain the main simulation code, data, figures, tex file and pdfs.
 
 # Folder Structure
+
+```
 HW#/
 ├── python/
 │ └── main.py
