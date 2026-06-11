@@ -1,0 +1,79 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[font=scriptsize]{caption}
+\usepackage{parskip}
+\usepackage[a4paper, margin= 1in ,total={6in, 8in}]{geometry}
+\usepackage{titling}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{graphicx}
+
+\parskip = 6pt plus 2pt minus 2pt
+\setlength{\droptitle}{-2cm}
+
+\title{HW1- Computer Simulation II}
+\author{Schewtschik, Guilherme  (3748052)}
+\date{\today}
+
+\begin{document}
+
+\section{Generator of Translations from the Unitary Operator}
+
+Spacetime translations are implemented by a unitary operator
+\begin{equation}
+U(a) = e^{-i a_\mu P^\mu}.
+\end{equation}
+By definition, momentum eigenstates transform as
+\begin{equation}
+U(a)\,|p\rangle = e^{-i p \cdot a} |p\rangle.
+\end{equation}
+
+Single-particle states are created from the vacuum via
+\begin{equation}
+|p\rangle = a^\dagger(p)\,|0\rangle,
+\end{equation}
+and the vacuum is invariant under translations:
+\begin{equation}
+U(a)\,|0\rangle = |0\rangle.
+\end{equation}
+
+Applying $U(a)$ to the state $|p\rangle$, we obtain
+\begin{align}
+U(a)\,|p\rangle 
+&= U(a)\,a^\dagger(p)\,|0\rangle \\
+&= \bigl(U(a)\,a^\dagger(p)\,U^\dagger(a)\bigr)\,|0\rangle.
+\end{align}
+Comparing with
+\begin{equation}
+U(a)\,|p\rangle = e^{-i p \cdot a} a^\dagger(p)\,|0\rangle,
+\end{equation}
+we conclude that
+\begin{equation}
+U(a)\,a^\dagger(p)\,U^\dagger(a) = e^{-i p \cdot a}\,a^\dagger(p).
+\end{equation}
+Similarly,
+\begin{equation}
+U(a)\,b^\dagger(p)\,U^\dagger(a) = e^{-i p \cdot a}\,b^\dagger(p).
+\end{equation}
+
+Thus, $a^\dagger(p)$ and $b^\dagger(p)$ create momentum eigenstates with eigenvalue $p^\mu$.
+
+The operator that generates these transformations must therefore assign momentum $p^\mu$ to each particle. This is achieved by the number operators
+\begin{equation}
+N_a(p) = a^\dagger(p)a(p), \qquad
+N_b(p) = b^\dagger(p)b(p),
+\end{equation}
+which count particles with momentum $p$.
+
+Summing over all momenta, the total momentum operator is
+\begin{equation}
+P^\mu = \int d\tilde{p}\, p^\mu 
+\left( a^\dagger(p)a(p) + b^\dagger(p)b(p) \right),
+\end{equation}
+which correctly reproduces the transformation of all multiparticle states under translations.
+\end{document}

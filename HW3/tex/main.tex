@@ -1,0 +1,121 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[font=scriptsize]{caption}
+\usepackage{parskip}
+\usepackage[a4paper, margin= 1in ,total={6in, 8in}]{geometry}
+\usepackage{titling}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{pgf}
+\usepackage{lmodern}
+\usepackage{import}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\pgfplotsset{compat=1.18}
+
+\parskip = 6pt plus 2pt minus 2pt
+\setlength{\droptitle}{-2cm}
+
+\title{HW3- Computer Simulation II}
+\author{Schewtschik, Guilherme  (3748052)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{}
+Using the code from the first homework (where I already had implemented the Wolff algorithm for improvements in computational time)
+we can easly calculate $dU/d\beta$ at $\beta_c$:
+
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \includegraphics[width=0.48\linewidth]{figures/U_T.pdf}
+    }
+    \caption{Binder parameter}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \includegraphics[width=0.48\linewidth]{figures/dudbeta_vs_L.pdf}
+    }
+    \caption{derivative of the Binder parameter}
+\end{minipage}
+
+\end{figure}
+
+We can see that $dU/d\beta$ scales linearly with lattice size.
+\section{}
+Using the q-states Potts model and $q=3$, $\beta = \ln(1+\sqrt{q})$, we can analyze the behavior of the system for different lattice sizes $L$.
+The following graph illustrate the equilibrium state of the system for different lattice sizes $L$:
+
+\resizebox{\textwidth}{!}{\input{figures/states.pgf}}
+
+\newpage
+We can see the distinc phases that arrise at the critical temperature, we can further calculate the Energy and Specific heat of the lattices.
+Plotting it in function of lattice size $L$:
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \input{figures/Energy_lineargraph.pgf}
+    }
+    \caption{Energy}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \input{figures/Specific_Heat_lineargraph.pgf}
+    }
+    \caption{Specific Heat}
+\end{minipage}
+
+\end{figure}
+
+We can see that the energy and specific heat seem to be dependent on powers of $L$, lets see how this graphs look in a log-scale:
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \input{figures/Energy_log.pgf}
+    }
+    \caption{Absolute Energy}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \resizebox{0.95\textwidth}{!}{
+    \input{figures/specific_heat_log.pgf}
+    }
+    \caption{Specific Heat}
+\end{minipage}
+
+\end{figure}
+
+So we see the relations:
+
+\[
+E \propto -L^{1.98} \quad \text{and} \quad C \propto L^{0.48}
+\]
+
+\end{document}
