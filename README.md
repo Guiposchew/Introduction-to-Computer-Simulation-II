@@ -1,5 +1,5 @@
 # Introduction-to-Computer-Simulation-II
-Introduction to Computer Simualtion II course at the International Physics Program (Honours), University of Leipzig 2026
+Introduction to Computer Simualtion II course at the International Physics Studies Program (Honours), University of Leipzig 2026
 
 # General Information
 Continuation of the Introduction to Computer Simulation I course, expands more deeply into the Ising, Potts and XY models, all folders contain the main simulation code, data, figures, tex file and pdfs.
