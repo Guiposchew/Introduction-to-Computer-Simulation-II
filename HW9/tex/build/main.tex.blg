@@ -1,5 +1,0 @@
-[0] Config.pm:328> INFO - This is Biber 2.21
-[1] Config.pm:331> INFO - Logfile is 'HW9/tex/main.tex.blg'
-[252] biber-MSWIN64:342> INFO - === 
-[1466] Utils.pm:479> ERROR - Cannot find 'HW9/tex/main.tex.bcf'!
-[1468] Biber.pm:137> INFO - ERRORS: 1
