@@ -1,0 +1,437 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[font=scriptsize]{caption}
+\usepackage{parskip}
+\usepackage[a4paper, margin=1in, total={6in, 8in}]{geometry}
+\usepackage{titling}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{references.bib}
+
+\parskip = 6pt plus 2pt minus 2pt
+\setlength{\droptitle}{-2cm}
+
+\title{Computer Simulation I - Summary Report}
+\author{Schewtschik, Guilherme (3748052)}
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+% ==================================================
+\begin{abstract}
+
+This report presents a collection of computational investigations in statistical physics and stochastic simulation methods. Exact enumeration techniques are applied to the one-dimensional Ising model, followed by Monte Carlo simulations using Glauber and Metropolis algorithms. Additional topics include pseudo-random number generation, Monte Carlo integration, random walks, self-avoiding walks, statistical estimators, and histogram reweighting techniques. Together, these studies demonstrate the effectiveness of computational approaches for investigating many-body systems and stochastic processes.
+
+\end{abstract}
+
+% ==================================================
+\section{Introduction}
+
+Statistical physics seeks to understand how macroscopic phenomena emerge from microscopic interactions. While some systems admit exact analytical solutions, many physically relevant models require numerical approaches.
+
+The Ising model provides a fundamental framework for studying collective behavior, phase transitions, and equilibrium thermodynamics. Throughout this report, exact solutions and computational techniques are employed to investigate spin systems and related stochastic processes.
+
+The primary objectives are:
+
+\begin{itemize}
+    \item Study exact solutions of finite Ising systems.
+    \item Analyze thermodynamic observables.
+    \item Implement Monte Carlo simulation techniques.
+    \item Investigate random walks and self-avoiding walks.
+    \item Explore histogram reweighting methods.
+\end{itemize}
+
+% ==================================================
+\section{Exact Enumeration of the One-Dimensional Ising Model}
+
+\subsection{Model Definition}
+
+The Hamiltonian of the one-dimensional Ising model is
+
+\begin{equation}
+H = -J \sum_{i=1}^{N-1} s_i s_{i+1},
+\end{equation}
+
+where
+
+\[
+s_i=\pm1
+\]
+
+and \(J\) denotes the interaction strength.
+
+All \(2^N\) possible spin configurations were generated numerically.
+
+\subsection{Partition Function}
+
+The partition function is defined as
+
+\begin{equation}
+Z(\beta)=\sum_{\{s\}} e^{-\beta H}.
+\end{equation}
+
+For free boundary conditions, the exact analytical solution is
+
+\begin{equation}
+Z_{\mathrm{free}}
+=
+2(2\cosh \beta J)^{N-1}.
+\end{equation}
+
+\subsection{Figure Placeholder}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 1: Partition Function vs Temperature
+}}
+\caption{Partition function for different system sizes.}
+\label{fig:partition}
+\end{figure}
+
+% ==================================================
+\section{Finite-Size Corrections and Free Energy}
+
+The free energy per spin is
+
+\begin{equation}
+f = -\frac{1}{\beta N}\ln Z.
+\end{equation}
+
+Finite-size corrections were studied by comparing finite systems with the thermodynamic limit.
+
+For periodic boundary conditions,
+
+\begin{equation}
+Z =
+(2\cosh\beta J)^N
++
+(2\sinh\beta J)^N.
+\end{equation}
+
+Numerical results show that boundary-condition effects vanish as
+
+\[
+N \rightarrow \infty.
+\]
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 2: Free Energy Corrections
+}}
+\caption{Finite-size corrections for free and periodic boundary conditions.}
+\end{figure}
+
+% ==================================================
+\section{Thermodynamic Observables}
+
+\subsection{Mean Energy}
+
+The average energy is
+
+\begin{equation}
+\langle E \rangle
+=
+\frac{
+\sum_E E e^{-\beta E}
+}{
+\sum_E e^{-\beta E}
+}.
+\end{equation}
+
+\subsection{Specific Heat}
+
+The heat capacity is obtained from energy fluctuations,
+
+\begin{equation}
+C =
+\frac{\beta^2}{N}
+\left(
+\langle E^2\rangle
+-
+\langle E\rangle^2
+\right).
+\end{equation}
+
+\subsection{Magnetization}
+
+The magnetization is
+
+\begin{equation}
+M = \sum_i s_i.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 3: Energy, Specific Heat and Magnetization
+}}
+\caption{Thermodynamic observables as functions of temperature.}
+\end{figure}
+
+% ==================================================
+\section{Monte Carlo Simulations}
+
+\subsection{Glauber Dynamics}
+
+The Glauber transition probability is
+
+\begin{equation}
+P(s_i \rightarrow -s_i)
+=
+\frac{1}
+{1+\exp(\beta \Delta E)}.
+\end{equation}
+
+This algorithm satisfies detailed balance and leads the system toward thermal equilibrium.
+
+\subsection{Metropolis Algorithm}
+
+The Metropolis acceptance probability is
+
+\begin{equation}
+P_{\mathrm{acc}}
+=
+\min\left(
+1,
+e^{-\beta\Delta E}
+\right).
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 4: Glauber Dynamics Results
+}}
+\caption{Energy evolution under Glauber dynamics.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 5: Metropolis Simulation Results
+}}
+\caption{Energy and heat capacity obtained through Metropolis simulations.}
+\end{figure}
+
+% ==================================================
+\section{Pseudo-Random Number Generation}
+
+Pseudo-random sequences were generated using a linear congruential generator:
+
+\begin{equation}
+X_{n+1}
+=
+(aX_n+c)\mod m.
+\end{equation}
+
+Statistical tests included:
+
+\begin{itemize}
+    \item Running averages
+    \item Variance estimation
+    \item Correlation analysis
+    \item Period determination
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 6: Random Number Tests
+}}
+\caption{Statistical properties of generated pseudo-random numbers.}
+\end{figure}
+
+% ==================================================
+\section{Monte Carlo Integration}
+
+The area of a unit circle was estimated by sampling random points within a square.
+
+\begin{equation}
+P
+=
+\frac{N_{\mathrm{inside}}}{N}.
+\end{equation}
+
+The area estimate becomes
+
+\begin{equation}
+A
+=
+4P.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 7: Monte Carlo Estimation of $\pi$
+}}
+\caption{Random sampling used for area estimation.}
+\end{figure}
+
+% ==================================================
+\section{Random Walks and Self-Avoiding Walks}
+
+\subsection{Simple Random Walks}
+
+For unbiased random walks,
+
+\begin{equation}
+\langle x \rangle = 0,
+\end{equation}
+
+while
+
+\begin{equation}
+\langle x^2 \rangle \propto N.
+\end{equation}
+
+\subsection{Self-Avoiding Walks}
+
+The end-to-end distance scales according to
+
+\begin{equation}
+\langle R_{ee}^2 \rangle
+\sim
+N^{2\nu},
+\end{equation}
+
+where
+
+\[
+\nu = \frac{3}{4}
+\]
+
+for two-dimensional systems.
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 8: Random Walk Examples
+}}
+\caption{Examples of one-dimensional random walks.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 9: Self-Avoiding Walk Scaling
+}}
+\caption{Scaling behavior of self-avoiding walks.}
+\end{figure}
+
+% ==================================================
+\section{Statistical Estimators}
+
+The sample variance estimator is
+
+\begin{equation}
+\hat{\sigma}^2
+=
+\frac{1}{N}
+\sum_{i=1}^{N}
+(X_i-\bar{X})^2.
+\end{equation}
+
+Its expectation value is
+
+\begin{equation}
+\langle \hat{\sigma}^2 \rangle
+=
+\sigma^2
+\left(
+1-\frac{1}{N}
+\right).
+\end{equation}
+
+An unbiased estimator is therefore
+
+\begin{equation}
+\tilde{\sigma}^2
+=
+\frac{N}{N-1}
+\hat{\sigma}^2.
+\end{equation}
+
+% ==================================================
+\section{Histogram Reweighting}
+
+Histogram reweighting allows observables at nearby temperatures to be estimated from a single simulation.
+
+\begin{equation}
+H_\beta(E)
+=
+H_{\beta_0}(E)
+e^{-(\beta-\beta_0)E}.
+\end{equation}
+
+The average energy becomes
+
+\begin{equation}
+\langle E \rangle_\beta
+=
+\frac{
+\sum_E E H_\beta(E)
+}{
+\sum_E H_\beta(E)
+}.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][7cm][c]{12cm}{
+\centering
+Insert Figure 10: Histogram Reweighting Results
+}}
+\caption{Energy distributions reconstructed through histogram reweighting.}
+\end{figure}
+
+% ==================================================
+\section{Discussion}
+
+The numerical investigations presented throughout this work demonstrate the close relationship between analytical theory and computational methods. Exact enumeration provides valuable benchmarks for finite systems, while Monte Carlo techniques enable the exploration of larger and more realistic systems.
+
+The Ising model served as a useful testing ground for both deterministic and stochastic approaches. Additional studies involving random walks and statistical estimators highlighted the broad applicability of computational physics techniques.
+
+% ==================================================
+\section{Conclusion}
+
+This report presented a comprehensive investigation of computational techniques in statistical physics. Exact solutions, Monte Carlo methods, random number generators, random walks, and histogram reweighting were successfully implemented and analyzed.
+
+The results reproduced theoretical predictions and demonstrated the usefulness of numerical methods for studying systems that are analytically intractable.
+
+% ==================================================
+
+\printbibliography
+
+\end{document}
+

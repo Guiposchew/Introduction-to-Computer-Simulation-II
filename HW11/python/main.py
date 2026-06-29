@@ -1,31 +1,3 @@
-"""
-Problem 20 - Finite-size scaling in the 2D Ising model at the critical point
-==============================================================================
-
-Simulate the 2D Ising model EXACTLY AT beta_c = ln(1+sqrt(2))/2 using the
-single-cluster (Wolff) algorithm, for L = 8, 16, 32, 64, 128 with periodic
-boundary conditions.
-
-From the time series of energy E and magnetization M, compute:
-  - specific heat        C(L)   = beta^2/V * (<E^2> - <E>^2)
-  - susceptibility        chi(L) = beta * V * <m^2>          (m = M/V)
-  - Binder parameter       U4(L)  = 1 - <m^4>/(3<m^2>^2)
-  - second Binder param    U2(L)  = 1 - <m^2>/(3<|m|>^2)
-  - dU4/dbeta, dU2/dbeta, d ln<m^2>/dbeta, d ln<|m|>/dbeta
-    using the exact identities derived in Problem 19:
-
-      d<A>/dbeta = V*(<A*e> - <A><e>)                          (*)
-
-      dU4/dbeta = V*(1-U4)*(<e> - 2<m^2 e>/<m^2> + <m^4 e>/<m^4>)
-      dU2/dbeta = V*(1-U2)*(<e> - 2<|m| e>/<|m|> + <m^2 e>/<m^2>)
-      d ln<m^2>/dbeta  = V*(<e> - <m^2 e>/<m^2>)
-      d ln<|m|>/dbeta  = V*(<e> - <|m| e>/<|m|>)
-
-All derivatives are computed DIRECTLY from the same Monte Carlo time series
-used for the primary observables (no separate simulation needed), since they
-are just different moment combinations of the same (e, m) samples.
-"""
-
 from __future__ import annotations
 
 import time
@@ -206,23 +178,6 @@ def compute_observables(energies, magnetizations, L, beta=BETA_C):
 
 def reweight_moments(energies, magnetizations, L,
                      beta0, beta_values):
-    """
-    Ferrenberg-Swendsen single-histogram reweighting.
-
-    Parameters
-    ----------
-    energies : ndarray
-        Energy time series collected at beta0.
-
-    magnetizations : ndarray
-
-    beta0 : float
-        Simulation temperature.
-
-    beta_values : ndarray
-        Temperatures where observables are estimated.
-    """
-
     V = L * L
 
     m = magnetizations / V
@@ -359,11 +314,43 @@ def run_finite_size_scan(
 
 
 if __name__ == "__main__":
-    df = run_finite_size_scan(rng_seed=42)
-    print()
-    print("=" * 90)
-    print("FINITE-SIZE SCALING RESULTS AT beta_c")
-    print("=" * 90)
-    cols = ["L", "specific_heat", "susceptibility", "U4", "U2",
-            "dU4_dbeta", "dU2_dbeta", "dlnm2_dbeta", "dlnmabs_dbeta"]
-    print(df[cols].to_string(index=False))
+    import matplotlib.pyplot as plt
+
+    run_finite_size_scan(L_list=[16, 32], n_meas=20_000, rng_seed=42)
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+    for ax, L in zip(axes, [16, 32]):
+        data = np.load(DATA_DIR / f"timeseries_L{L}.npz")
+        energies, magnetizations = data["energies"], data["magnetizations"]
+
+        half_width = 3.0 / L
+        beta_rw = np.linspace(BETA_C - half_width, BETA_C + half_width, 200)
+        df_rw = reweight_moments(energies, magnetizations, L, BETA_C, beta_rw)
+
+        ax.plot(beta_rw, df_rw["absm"], c="C0", label=r"$\langle|m|\rangle$ (reweight)")
+        ax.plot(beta_rw, df_rw["m2"],   c="C1", label=r"$\langle m^2\rangle$ (reweight)")
+        ax.plot(beta_rw, df_rw["m4"],   c="C2", label=r"$\langle m^4\rangle$ (reweight)")
+
+        V = L * L
+        state = np.random.choice(np.array([-1, 1], dtype=np.int8), size=(L, L))
+        first = True
+        for offset in [-2.0, -0.8, 0.8, 2.0]:
+            beta_d = BETA_C + offset / L
+            e_d, m_d = run_wolff_chain(state, beta_d, max(30 * V, 2000), 10_000, 1)
+            m_d = m_d / V
+            # label only on first offset to avoid four duplicate legend entries
+            lbl = "direct sim" if first else None
+            ax.scatter(beta_d, np.mean(np.abs(m_d)), c="C0", marker="x", s=50, zorder=5, label=lbl)
+            ax.scatter(beta_d, np.mean(m_d ** 2),    c="C1", marker="x", s=50, zorder=5)
+            ax.scatter(beta_d, np.mean(m_d ** 4),    c="C2", marker="x", s=50, zorder=5)
+            first = False
+
+        ax.axvline(BETA_C, ls="--", color="grey", lw=0.8, label=r"$\beta_c$")
+        ax.set_title(f"L={L}")
+        ax.set_xlabel(r"$\beta$")
+        ax.legend(fontsize=8)
+
+    plt.tight_layout()
+    plt.savefig(DATA_DIR / "reweighting_magnetisation.png", dpi=150)
+    plt.show()
