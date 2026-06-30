@@ -9,6 +9,7 @@
 *.vrb
 *.npz
 *.csv
+*.synctex.gz
 
 # Python
 __pycache__/
