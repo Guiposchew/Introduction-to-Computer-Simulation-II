@@ -4,6 +4,9 @@ Introduction to Computer Simualtion II course at the International Physics Studi
 # General Information
 Continuation of the Introduction to Computer Simulation I course, expands more deeply into the Ising, Potts and XY models, all folders contain the main simulation code, data, figures, tex file and pdfs.
 
+# Final Report
+[Open full report](https://guiposchew.github.io/pdfs/Report_Comp_Sim_II.pdf)
+
 # Folder Structure
 
 ```
